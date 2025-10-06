@@ -1,3 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Runner</string>
+    <string name="app_name">CyberRun</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="steps">STEPS</string>
+    <string name="distance">DISTANCE</string>
+    <string name="speed">SPEED</string>
+    <string name="km">km</string>
+    <string name="m_s">m/s</string>
+    <string name="gps_signal_unstable">⚠ GPS tín hiệu không ổn định, bỏ qua đoạn đường này.</string>
+    <string name="tracker_notification_title">CyberRun Đang Hoạt Động</string>
+    <string name="tracker_notification_text">Theo dõi quãng đường chạy của bạn</string>
+    <string name="permission_required">Yêu cầu cấp quyền</string>
+    <string name="location_permission_message">CyberRun cần quyền truy cập vị trí để đo quãng đường chạy</string>
+    <string name="activity_permission_message">CyberRun cần quyền theo dõi hoạt động để đếm bước chân</string>
+    <string name="grant_permission">Cấp quyền</string>
+    <string name="cancel">Hủy</string>
 </resources>
+

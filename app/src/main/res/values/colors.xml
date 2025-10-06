@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Màu sắc cơ bản - sáng, dễ đọc khi hoạt động -->
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="primary">#2196F3</color>  <!-- Xanh dương -->
+    <color name="primary_dark">#1976D2</color>  <!-- Xanh dương đậm -->
+    <color name="accent">#FF5722</color>  <!-- Cam đỏ cho điểm nhấn -->
+    <color name="light_background">#FAFAFA</color>  <!-- Nền trắng nhẹ -->
+    <color name="card_background">#FFFFFF</color>  <!-- Nền thẻ trắng -->
+    <color name="text_primary">#212121</color>  <!-- Chữ đen chính -->
+    <color name="text_secondary">#757575</color>  <!-- Chữ xám phụ -->
+    <color name="distance_color">#E91E63</color>  <!-- Màu hồng cho khoảng cách - thông số quan trọng nhất -->
+    <color name="steps_color">#3F51B5</color>  <!-- Xanh dương đậm cho số bước -->
+    <color name="speed_color">#FF9800</color>  <!-- Cam cho tốc độ -->
+    <color name="divider">#EEEEEE</color>  <!-- Màu phân chia nhẹ -->
+    <color name="start_button">#4CAF50</color>  <!-- Xanh lá cho nút bắt đầu -->
+    <color name="stop_button">#F44336</color>  <!-- Đỏ cho nút dừng -->
 </resources>
