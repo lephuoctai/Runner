@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/tvDateTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="20:30 06/10/2025"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDistanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Distance:"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+
+        <TextView
+            android:id="@+id/tvRecordDistance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="2.50 km"
+            android:textColor="@color/distance_color"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDistanceLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvDistanceLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvDistanceLabel" />
+
+        <TextView
+            android:id="@+id/tvDurationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Duration:"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDistanceLabel" />
+
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="25:30"
+            android:textColor="@color/text_primary"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDurationLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvDurationLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvDurationLabel" />
+
+        <TextView
+            android:id="@+id/tvStepsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Steps:"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDurationLabel" />
+
+        <TextView
+            android:id="@+id/tvRecordSteps"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="3,560 steps"
+            android:textColor="@color/steps_color"
+            app:layout_constraintBottom_toBottomOf="@+id/tvStepsLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvStepsLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvStepsLabel" />
+
+        <TextView
+            android:id="@+id/tvSpeedLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:text="Avg. Speed:"
+            android:textColor="@color/text_secondary"
+            app:layout_constraintStart_toEndOf="@+id/tvRecordSteps"
+            app:layout_constraintTop_toTopOf="@+id/tvStepsLabel" />
+
+        <TextView
+            android:id="@+id/tvRecordSpeed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="1.8 m/s"
+            android:textColor="@color/speed_color"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSpeedLabel"
+            app:layout_constraintStart_toEndOf="@+id/tvSpeedLabel"
+            app:layout_constraintTop_toTopOf="@+id/tvSpeedLabel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

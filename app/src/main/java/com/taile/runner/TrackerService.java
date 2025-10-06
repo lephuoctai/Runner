@@ -29,6 +29,8 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.taile.runner.models.RunRecord;
+import com.taile.runner.storage.RunRecordsManager;
 
 public class TrackerService extends LifecycleService implements SensorEventListener {
 
@@ -41,6 +43,7 @@ public class TrackerService extends LifecycleService implements SensorEventListe
     private final MutableLiveData<Integer> stepCount = new MutableLiveData<>(0);
     private final MutableLiveData<Float> totalDistance = new MutableLiveData<>(0f);
     private final MutableLiveData<Float> currentSpeed = new MutableLiveData<>(0f);
+    private final MutableLiveData<Location> currentLocation = new MutableLiveData<>();
 
     // Location tracking
     private FusedLocationProviderClient fusedLocationClient;
@@ -55,6 +58,10 @@ public class TrackerService extends LifecycleService implements SensorEventListe
     private int initialSteps = -1;
     private int currentSteps = 0;
 
+    // Run tracking
+    private long runStartTime = 0;
+    private RunRecordsManager recordsManager;
+
     // Binder
     private final IBinder binder = new LocalBinder();
 
@@ -67,6 +74,9 @@ public class TrackerService extends LifecycleService implements SensorEventListe
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Initialize record storage
+        recordsManager = new RunRecordsManager(this);
 
         // Initialize location client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -99,6 +109,15 @@ public class TrackerService extends LifecycleService implements SensorEventListe
         createNotificationChannel();
         startForeground(NOTIFICATION_ID, createNotification());
 
+        // Record run start time
+        runStartTime = System.currentTimeMillis();
+
+        // Reset counters
+        initialSteps = -1;
+        currentSteps = 0;
+        stepCount.postValue(0);
+        totalDistance.postValue(0f);
+
         // Start location updates
         startLocationUpdates();
 
@@ -112,6 +131,9 @@ public class TrackerService extends LifecycleService implements SensorEventListe
 
     @Override
     public void onDestroy() {
+        // Save run record before stopping service
+        saveRunRecord();
+
         // Stop location updates
         stopLocationUpdates();
 
@@ -121,6 +143,33 @@ public class TrackerService extends LifecycleService implements SensorEventListe
         }
 
         super.onDestroy();
+    }
+
+    private void saveRunRecord() {
+        // Only save if there was some meaningful activity
+        if (runStartTime > 0 && totalDistance.getValue() != null && totalDistance.getValue() > 0) {
+            long endTime = System.currentTimeMillis();
+
+            RunRecord record = new RunRecord();
+            record.setStartTime(runStartTime);
+            record.setEndTime(endTime);
+            record.setDistance(totalDistance.getValue());
+            record.setSteps(currentSteps);
+
+            // Calculate average speed
+            float avgSpeed = 0;
+            if (endTime > runStartTime) {
+                float durationSeconds = (endTime - runStartTime) / 1000f;
+                if (durationSeconds > 0) {
+                    // Convert km to meters for m/s
+                    avgSpeed = (totalDistance.getValue() * 1000) / durationSeconds;
+                }
+            }
+            record.setAvgSpeed(avgSpeed);
+
+            // Save to storage
+            recordsManager.addRecord(record);
+        }
     }
 
     @Override
@@ -145,6 +194,9 @@ public class TrackerService extends LifecycleService implements SensorEventListe
 
     private void onNewLocation(Location location) {
         if (location != null) {
+            // Update current location LiveData for map display
+            currentLocation.postValue(location);
+
             if (lastLocation != null) {
                 // Calculate distance between current and last location
                 float distance = location.distanceTo(lastLocation);
@@ -225,6 +277,10 @@ public class TrackerService extends LifecycleService implements SensorEventListe
 
     public MutableLiveData<Float> getCurrentSpeed() {
         return currentSpeed;
+    }
+
+    public MutableLiveData<Location> getCurrentLocation() {
+        return currentLocation;
     }
 
     // Notification management

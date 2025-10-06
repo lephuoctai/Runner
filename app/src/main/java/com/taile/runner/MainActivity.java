@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -21,9 +23,14 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.taile.runner.TrackerService.LocalBinder;
 import com.taile.runner.databinding.ActivityMainBinding;
+import com.taile.runner.fragments.MapFragment;
+import com.taile.runner.fragments.RecordedLogFragment;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -35,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isTracking = false;
     private TrackerService trackerService;
     private boolean boundToService = false;
+
+    // Current active fragment
+    private Fragment currentFragment;
 
     // Formatters for display
     private final DecimalFormat distanceFormat = new DecimalFormat("0.00");
@@ -87,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Setup RadioGroup for tab switching
+        setupTabsRadioGroup();
+
         // Setup start/stop button
         binding.btnStartStop.setOnClickListener(v -> {
             if (isTracking) {
@@ -98,6 +111,38 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize UI
         updateUIForTrackingState();
+
+        // Show the default fragment (RecordedLog)
+        showFragment(new RecordedLogFragment());
+    }
+
+    private void setupTabsRadioGroup() {
+        binding.tagGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.tagLogRecord) {
+                showFragment(new RecordedLogFragment());
+            } else if (checkedId == R.id.tagMap) {
+                showFragment(new MapFragment());
+            } else if (checkedId == R.id.tagRanking) {
+                // Implement Ranking fragment if needed
+                Toast.makeText(this, "Ranking feature coming soon", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Set default selection
+        binding.tagLogRecord.setChecked(true);
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        // Replace whatever is in the fragment container with the new fragment
+        transaction.replace(R.id.cardShowContentTag, fragment);
+
+        // Complete the changes
+        transaction.commit();
+
+        currentFragment = fragment;
     }
 
     @Override
@@ -133,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
             // Observe speed
             trackerService.getCurrentSpeed().observe(this, speed -> {
                 binding.tvSpeed.setText(speedFormat.format(speed));
+            });
+
+            // Observe current location (will be useful for MapFragment)
+            trackerService.getCurrentLocation().observe(this, location -> {
+                if (currentFragment instanceof MapFragment) {
+                    // The MapFragment will handle this through its own observer
+                }
             });
         }
     }
@@ -199,6 +251,11 @@ public class MainActivity extends AppCompatActivity {
         // Update tracking state
         isTracking = false;
         updateUIForTrackingState();
+
+        // Refresh the RecordedLogFragment if it's visible
+        if (currentFragment instanceof RecordedLogFragment) {
+            showFragment(new RecordedLogFragment());
+        }
     }
 
     private void updateUIForTrackingState() {
@@ -213,5 +270,13 @@ public class MainActivity extends AppCompatActivity {
             binding.btnStartStop.setBackgroundColor(
                     ContextCompat.getColor(this, R.color.start_button));
         }
+    }
+
+    /**
+     * Method to provide access to the TrackerService for fragments
+     * @return The current TrackerService instance or null if not bound
+     */
+    public TrackerService getTrackerService() {
+        return boundToService ? trackerService : null;
     }
 }
